@@ -283,9 +283,6 @@
             const errorBox = document.getElementById('error-box');
             const spinner = document.getElementById('spinner');
             const generateBtnText = document.getElementById('generate-btn-text');
-
-            const API_KEY = ""; // In a real app, this would be handled securely. Canvas provides this at runtime.
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
             
             generateBtn.addEventListener('click', async () => {
                 const textInput = contentInput.value.trim();
@@ -305,12 +302,12 @@
                         base64ImageData = await fileToBase64(imageFile);
                     }
                     
-                    const responseJson = await callGeminiAPI(textInput, base64ImageData);
+                    const responseJson = await callBackendAPI(textInput, base64ImageData);
                     
                     if (responseJson && responseJson.affectiveAim && responseJson.landingAction && responseJson.materialsMedia) {
                          populateOutputs(responseJson);
                     } else {
-                        throw new Error("AI response was not in the expected format. Please try again.");
+                         throw new Error(responseJson.error || "The AI response was not in the expected format. Please try again.");
                     }
 
                 } catch (error) {
@@ -321,39 +318,13 @@
                 }
             });
 
-            async function callGeminiAPI(text, base64Image) {
-                 const systemPrompt = `You are an expert instructional designer for English Language Teaching (ELT). Your task is to help a teacher brainstorm an engaging lesson lead-in using the C.A.L.M. framework (Content, Affective Aim, Landing Action, Materials). Based on the user's 'Content Analysis' (provided as text or an image), generate concise, practical, and creative ideas for the other three steps.`;
-
-                const userPrompt = `Here is the lesson content analysis. Generate the 'Affective Aim', 'Landing Action', and 'Materials & Media'.
-                
-                Content Analysis: "${text}"`;
-
-                let parts = [{ text: userPrompt }];
-
-                if (base64Image) {
-                    parts.push({
-                        inlineData: {
-                            mimeType: "image/png",
-                            data: base64Image
-                        }
-                    });
-                }
+            async function callBackendAPI(text, base64Image) {
+                // This URL points to our new secure "middleman" function.
+                const API_URL = `/.netlify/functions/get_suggestions`;
                 
                 const payload = {
-                    systemInstruction: { parts: [{ text: systemPrompt }] },
-                    contents: [{ role: "user", parts: parts }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                "affectiveAim": { "type": "STRING", "description": "A concise suggestion for the target emotion." },
-                                "landingAction": { "type": "STRING", "description": "A brief description of an activity to evoke that emotion." },
-                                "materialsMedia": { "type": "STRING", "description": "A short list of materials needed for the activity." }
-                            },
-                           "required": ["affectiveAim", "landingAction", "materialsMedia"]
-                        }
-                    }
+                    text: text,
+                    image: base64Image
                 };
 
                 const response = await fetch(API_URL, {
@@ -364,17 +335,10 @@
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.error?.message || `API request failed with status ${response.status}`);
+                    throw new Error(errorData.error || `The server returned an error: ${response.status}`);
                 }
                 
-                const result = await response.json();
-                
-                const candidate = result.candidates?.[0];
-                if (candidate?.content?.parts?.[0]?.text) {
-                     return JSON.parse(candidate.content.parts[0].text);
-                } else {
-                    throw new Error("Invalid response structure from AI model.");
-                }
+                return await response.json();
             }
 
             function fileToBase64(file) {
