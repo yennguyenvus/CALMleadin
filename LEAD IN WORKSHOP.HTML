@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The CALM AI Method for Lesson Lead-ins</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" xintegrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoVBL5gI9kLmbG4dGdGbtD2CLlga1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Animation for the flow items */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .flow-item {
+            animation: slideIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        /* Stagger the animation */
+        .flow-item:nth-child(1) { animation-delay: 0.1s; }
+        .flow-item:nth-child(2) { animation-delay: 0.3s; }
+        .flow-item:nth-child(3) { animation-delay: 0.5s; }
+        .flow-item:nth-child(4) { animation-delay: 0.7s; }
+
+        /* Style for the connecting arrows */
+        .flow-connector {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            width: 5rem;
+            height: 2px;
+            background-color: #cbd5e1; /* slate-300 */
+        }
+        .flow-connector::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            width: 12px;
+            height: 12px;
+            border-top: 2px solid #cbd5e1;
+            border-right: 2px solid #cbd5e1;
+        }
+
+        /* Styles for collapsible sections */
+        .details-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .details-content.expanded {
+            max-height: 200px; /* Adjust as needed */
+        }
+        .chevron {
+            transition: transform 0.3s ease-in-out;
+        }
+        .chevron.rotated {
+            transform: rotate(180deg);
+        }
+        /* Utility for balanced text wrapping */
+        .balanced-text {
+            text-wrap: balance;
+        }
+
+        /* Spinner animation */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-template, #printable-template * {
+                visibility: visible;
+            }
+            #printable-template {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 2rem;
+            }
+             #ai-planner-title, #ai-planner-title *,
+             .ai-planner-step, .ai-planner-step * {
+                visibility: visible;
+            }
+            textarea {
+                border: 1px solid #d1d5db !important;
+                background-color: #f9fafb !important;
+                -webkit-print-color-adjust: exact;
+                 color-adjust: exact;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
+
+    <div class="w-full max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-10 md:mb-16 no-print">
+            <h1 class="text-3xl md:text-5xl font-bold text-slate-900">The C.A.L.M. Method</h1>
+            <p class="mt-3 text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">An AI-Powered Flow for Planning Engaging English Lesson Lead-ins</p>
+        </header>
+
+        <!-- Main Flow Diagram Container -->
+        <div id="diagram-to-download" class="no-print">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-20 gap-y-12 md:gap-y-16">
+                <!-- Step 1: Content Analysis -->
+                <div class="relative bg-white p-6 rounded-xl shadow-lg border border-slate-200 flex flex-col text-center flow-item">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-teal-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold shadow-md">C</div>
+                    <div class="mt-8 cursor-pointer collapsible-trigger">
+                         <div class="inline-flex items-center gap-2">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-500"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                             <h2 class="text-xl font-semibold text-teal-600 whitespace-nowrap">Content Analysis</h2>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron text-slate-400"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                         </div>
+                    </div>
+                    <div class="details-content">
+                        <p class="mt-3 text-slate-600 text-sm balanced-text">Analyze lesson themes, objectives, and connections. Identify key stories or figures to build upon.</p>
+                    </div>
+                    <div class="hidden lg:block flow-connector"></div>
+                </div>
+
+                <!-- Step 2: Affective Aim -->
+                <div class="relative bg-white p-6 rounded-xl shadow-lg border border-slate-200 flex flex-col text-center flow-item">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-sky-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold shadow-md">A</div>
+                    <div class="mt-8 cursor-pointer collapsible-trigger">
+                        <div class="inline-flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                            <h2 class="text-xl font-semibold text-sky-600 whitespace-nowrap">Affective Aim</h2>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron text-slate-400"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                    </div>
+                    <div class="details-content">
+                        <p class="mt-3 text-slate-600 text-sm balanced-text">Select a key emotion that connects directly to the lesson's core content.</p>
+                    </div>
+                    <div class="hidden lg:block flow-connector"></div>
+                </div>
+
+                <!-- Step 3: Landing Action -->
+                <div class="relative bg-white p-6 rounded-xl shadow-lg border border-slate-200 flex flex-col text-center flow-item">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-amber-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold shadow-md">L</div>
+                    <div class="mt-8 cursor-pointer collapsible-trigger">
+                        <div class="inline-flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-500"><line x1="6" y1="11" x2="10" y2="11"></line><line x1="8" y1="9" x2="8" y2="13"></line><line x1="15" y1="12" x2="15.01" y2="12"></line><line x1="18" y1="10" x2="18.01" y2="10"></line><path d="M17.32 5H6.68a4 4 0 0 0-3.97 3.59c-.2 1.42-.06 2.88.4 4.24l1.1 2.47a1 1 0 0 0 .88.69h11.18a1 1 0 0 0 .88-.69l1.1-2.47c.46-1.36.6-2.82.4-4.24A4 4 0 0 0 17.32 5z"></path></svg>
+                            <h2 class="text-xl font-semibold text-amber-600 whitespace-nowrap">Landing Action</h2>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron text-slate-400"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                    </div>
+                    <div class="details-content">
+                         <p class="mt-3 text-slate-600 text-sm balanced-text">Design a specific activity or task that will guide students toward the target emotion.</p>
+                    </div>
+                    <div class="hidden lg:block flow-connector"></div>
+                </div>
+
+                <!-- Step 4: Materials & Media -->
+                <div class="relative bg-white p-6 rounded-xl shadow-lg border border-slate-200 flex flex-col text-center flow-item">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-rose-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold shadow-md">M</div>
+                    <div class="mt-8 cursor-pointer collapsible-trigger">
+                        <div class="inline-flex items-center gap-2">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-rose-500"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                            <h2 class="text-xl font-semibold text-rose-600 whitespace-nowrap">Materials & Media</h2>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron text-slate-400"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                    </div>
+                    <div class="details-content">
+                        <p class="mt-3 text-slate-600 text-sm balanced-text">Gather and prepare all necessary tools, resources, and media for the planned activity.</p>
+                    </div>
+                </div>
+            </div>
+             <!-- Example Box -->
+            <div class="mt-16 bg-white border-l-4 border-teal-500 p-6 rounded-r-lg shadow-md max-w-4xl mx-auto">
+                <h3 class="font-bold text-lg text-slate-800">Putting It All Together: An Example</h3>
+                <p class="mt-2 text-slate-700">
+                    For a reading about "First Impressions" (<span class="font-semibold text-teal-600">C</span>), I want students to feel <span class="font-semibold text-sky-600">surprised</span> (<span class="font-semibold text-sky-600">A</span>). I'll run a guessing game (<span class="font-semibold text-amber-600">L</span>) using childhood photos of a CEO, a serial killer, and a pop star on a Google Slides presentation (<span class="font-semibold text-rose-600">M</span>). The reveal will challenge their assumptions and lead perfectly into the main topic.
+                </p>
+            </div>
+        </div>
+        
+        <!-- AI Planning Template -->
+        <div id="printable-template" class="mt-20">
+            <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                <h2 id="ai-planner-title" class="text-2xl font-bold text-center text-slate-900 mb-2">AI-Powered C.A.L.M. Lesson Planner</h2>
+                <p class="text-center text-slate-500 mb-8">Enter your lesson content below, and let AI help you brainstorm the rest!</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Content Analysis -->
+                    <div class="md:col-span-2 space-y-2 ai-planner-step">
+                        <h3 class="text-lg font-semibold text-teal-600">C: Content Analysis</h3>
+                        <p class="text-sm text-slate-500">Type your lesson topic, or upload a screenshot of your material.</p>
+                        <textarea id="content-analysis-input" rows="6" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition" placeholder="e.g., A reading passage about the challenges of first impressions, focusing on vocabulary like 'prejudice', 'assumption', and 'perception'..."></textarea>
+                        <div class="flex items-center justify-between gap-4">
+                            <input type="file" id="image-upload" accept="image/*" class="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"/>
+                             <button id="generate-btn" class="bg-indigo-600 text-white font-bold py-2 px-5 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path></svg>
+                                <span id="generate-btn-text">Generate with AI</span>
+                                <div id="spinner" class="spinner hidden"></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- AI Generated Fields -->
+                    <div class="space-y-2 ai-planner-step">
+                        <h3 class="text-lg font-semibold text-sky-600">A: Affective Aim</h3>
+                        <textarea id="affective-aim-output" rows="8" class="w-full p-3 border border-slate-300 rounded-lg bg-slate-50 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition" placeholder="AI will suggest a target emotion here..."></textarea>
+                    </div>
+                    <div class="space-y-2 ai-planner-step">
+                        <h3 class="text-lg font-semibold text-amber-600">L: Landing Action</h3>
+                        <textarea id="landing-action-output" rows="8" class="w-full p-3 border border-slate-300 rounded-lg bg-slate-50 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition" placeholder="AI will suggest an activity here..."></textarea>
+                    </div>
+                     <div class="md:col-span-2 space-y-2 ai-planner-step">
+                        <h3 class="text-lg font-semibold text-rose-600">M: Materials & Media</h3>
+                        <textarea id="materials-media-output" rows="8" class="w-full p-3 border border-slate-300 rounded-lg bg-slate-50 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition" placeholder="AI will suggest required materials here..."></textarea>
+                    </div>
+                </div>
+                 <div id="error-box" class="mt-4 p-4 text-center text-red-800 bg-red-100 border border-red-300 rounded-lg hidden"></div>
+            </div>
+            <div class="text-center mt-8 no-print">
+                <button id="print-btn" class="bg-gray-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition-transform transform hover:scale-105">
+                    Print Plan
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Existing code for collapsible diagram ---
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function () {
+                    const content = this.parentElement.querySelector('.details-content');
+                    const chevron = this.querySelector('.chevron');
+                    content.classList.toggle('expanded');
+                    chevron.classList.toggle('rotated');
+                });
+            });
+
+             // --- Print button functionality ---
+            const printBtn = document.getElementById('print-btn');
+            printBtn.addEventListener('click', function() {
+                window.print();
+            });
+
+            // --- AI Planner Functionality ---
+            const generateBtn = document.getElementById('generate-btn');
+            const contentInput = document.getElementById('content-analysis-input');
+            const imageUpload = document.getElementById('image-upload');
+            const affectiveAimOutput = document.getElementById('affective-aim-output');
+            const landingActionOutput = document.getElementById('landing-action-output');
+            const materialsMediaOutput = document.getElementById('materials-media-output');
+            const errorBox = document.getElementById('error-box');
+            const spinner = document.getElementById('spinner');
+            const generateBtnText = document.getElementById('generate-btn-text');
+
+            const API_KEY = ""; // In a real app, this would be handled securely. Canvas provides this at runtime.
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+            
+            generateBtn.addEventListener('click', async () => {
+                const textInput = contentInput.value.trim();
+                const imageFile = imageUpload.files[0];
+
+                if (!textInput && !imageFile) {
+                    showError("Please provide some lesson content or upload an image.");
+                    return;
+                }
+
+                setLoadingState(true);
+                clearOutputs();
+
+                try {
+                    let base64ImageData = null;
+                    if (imageFile) {
+                        base64ImageData = await fileToBase64(imageFile);
+                    }
+                    
+                    const responseJson = await callGeminiAPI(textInput, base64ImageData);
+                    
+                    if (responseJson && responseJson.affectiveAim && responseJson.landingAction && responseJson.materialsMedia) {
+                         populateOutputs(responseJson);
+                    } else {
+                        throw new Error("AI response was not in the expected format. Please try again.");
+                    }
+
+                } catch (error) {
+                    console.error("Error:", error);
+                    showError(error.message || "An unexpected error occurred. Please check the console and try again.");
+                } finally {
+                    setLoadingState(false);
+                }
+            });
+
+            async function callGeminiAPI(text, base64Image) {
+                 const systemPrompt = `You are an expert instructional designer for English Language Teaching (ELT). Your task is to help a teacher brainstorm an engaging lesson lead-in using the C.A.L.M. framework (Content, Affective Aim, Landing Action, Materials). Based on the user's 'Content Analysis' (provided as text or an image), generate concise, practical, and creative ideas for the other three steps.`;
+
+                const userPrompt = `Here is the lesson content analysis. Generate the 'Affective Aim', 'Landing Action', and 'Materials & Media'.
+                
+                Content Analysis: "${text}"`;
+
+                let parts = [{ text: userPrompt }];
+
+                if (base64Image) {
+                    parts.push({
+                        inlineData: {
+                            mimeType: "image/png",
+                            data: base64Image
+                        }
+                    });
+                }
+                
+                const payload = {
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    contents: [{ role: "user", parts: parts }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "affectiveAim": { "type": "STRING", "description": "A concise suggestion for the target emotion." },
+                                "landingAction": { "type": "STRING", "description": "A brief description of an activity to evoke that emotion." },
+                                "materialsMedia": { "type": "STRING", "description": "A short list of materials needed for the activity." }
+                            },
+                           "required": ["affectiveAim", "landingAction", "materialsMedia"]
+                        }
+                    }
+                };
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || `API request failed with status ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                const candidate = result.candidates?.[0];
+                if (candidate?.content?.parts?.[0]?.text) {
+                     return JSON.parse(candidate.content.parts[0].text);
+                } else {
+                    throw new Error("Invalid response structure from AI model.");
+                }
+            }
+
+            function fileToBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = error => reject(error);
+                });
+            }
+            
+            function populateOutputs(data) {
+                affectiveAimOutput.value = data.affectiveAim;
+                landingActionOutput.value = data.landingAction;
+                materialsMediaOutput.value = data.materialsMedia;
+            }
+
+            function clearOutputs() {
+                affectiveAimOutput.value = '';
+                landingActionOutput.value = '';
+                materialsMediaOutput.value = '';
+                errorBox.classList.add('hidden');
+            }
+
+            function showError(message) {
+                errorBox.textContent = message;
+                errorBox.classList.remove('hidden');
+            }
+
+            function setLoadingState(isLoading) {
+                if (isLoading) {
+                    generateBtn.disabled = true;
+                    spinner.classList.remove('hidden');
+                    generateBtnText.textContent = "Generating...";
+                } else {
+                    generateBtn.disabled = false;
+                    spinner.classList.add('hidden');
+                    generateBtnText.textContent = "Generate with AI";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
